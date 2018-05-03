@@ -47,7 +47,17 @@
 
             return jsonObj;
         },
-
+        stampPDF: function( sourceFile, stampFile, outputFile, callback){
+            var args = [sourceFile, "stamp", stampFile, "output", outputFile];
+            execFile( "pdftk", args, function (error, stdout, stderr) {
+                debugger;
+                if ( error ) {
+                    console.log('exec error: ' + error);
+                    return callback(error);
+                }
+                return callback();
+            } );
+        },
         generateFieldJson: function( sourceFile, nameRegex, callback){
             var regName = /FieldName: ([^\n]*)/,
                 regType = /FieldType: ([A-Za-z\t .]+)/,
@@ -76,13 +86,13 @@
                     }else {
                         currField['fieldType'] = '';
                     }
-                     
+
                     if(field.match(regFlags)){
                         currField['fieldFlags'] = field.match(regFlags)[1].trim() || '';
                     }else{
                         currField['fieldFlags'] = '';
                     }
-                    
+
                     if(field.match(regValue)){
                         currField['fieldValue'] = field.match(regValue)[1].trim() || '';
                     }else{
@@ -149,7 +159,7 @@
         }
 
     };
-        
+
     module.exports = pdffiller;
 
 }())
