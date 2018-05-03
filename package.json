@@ -1,0 +1,30 @@
+{
+  "name": "pdffiller-keepfields",
+  "version": "1.1.0",
+  "private": false,
+  "description": "Take an existing PDF Form and data and PDF Filler will create a new PDF with all given fields populated.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha test/test.js"
+  },
+  "keywords": [
+    "nodejs",
+    "pdftk",
+    "fdf",
+    "pdffiller",
+    "pdf",
+    "form"
+  ],
+  "dependencies": {
+    "lodash": "~3.8.0",
+    "utf8-fdf-generator": "0.0.3"
+  },
+  "author": {
+    "name": "John Taylor, David Baldwynn and Bill Butler"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "~2.4.5",
+    "should": "~6.0.1"
+  }
+}
