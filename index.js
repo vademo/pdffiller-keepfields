@@ -55,7 +55,7 @@
                     console.log('exec error: ' + error);
                     return callback(error);
                 }
-                return callback(null, { filename: outputFile  });
+                return callback();
             } );
         },
         generateFieldJson: function( sourceFile, nameRegex, callback){
