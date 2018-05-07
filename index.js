@@ -92,6 +92,21 @@
                                 console.log('exec error: ' + error);
                                 return callback(error);
                             }
+                            fs.unlink(lastPage, (err) => {
+                              if (err) {
+                                console.log('unlink failed', err);
+                              }
+                            });
+                            fs.unlink(firstPages, (err) => {
+                              if (err) {
+                                console.log('unlink failed', err);
+                              }
+                            });
+                            fs.unlink(signedLastPage, (err) => {
+                              if (err) {
+                                console.log('unlink failed', err);
+                              }
+                            });
                             return callback();
                         });
                     });
