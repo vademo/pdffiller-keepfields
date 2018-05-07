@@ -12,7 +12,7 @@
         fdf = require('utf8-fdf-generator'),
         _ = require('lodash'),
         fs = require('fs');
-
+    const path = require('path');
     var pdffiller = {
 
         mapForm2PDF: function( formFields, convMap ){
@@ -56,6 +56,46 @@
                     return callback(error);
                 }
                 return callback();
+            } );
+        },
+        stampLastPage: function( sourceFile, stampFile, outputFile, callback){
+          const TimeStamp = new Date().getTime()
+          const lastPage = path.resolve(`./temp/${TimeStamp}_Last.pdf`);
+          const firstPages = path.resolve(`./temp/${TimeStamp}_firstpages.pdf`);
+          const signedLastPage = path.resolve(`./temp/${TimeStamp}_signedLast.pdf`);
+
+          var lastPageArg = [sourceFile, "cat", "end", "output", lastPage];
+            execFile( "pdftk", lastPageArg, function (error, stdout, stderr) {
+                debugger;
+                if ( error ) {
+                    console.log('exec error: ' + error);
+                    return callback(error);
+                }
+                var stampArg = [lastPage, "stamp", stampFile, "output", signedLastPage];
+                return execFile( "pdftk", stampArg, function (error, stdout, stderr) {
+                    debugger;
+                    if ( error ) {
+                        console.log('exec error: ' + error);
+                        return callback(error);
+                    }
+                    var firstPagesArg = [sourceFile, "cat", "1-r2", "output", firstPages];
+                    return execFile( "pdftk", firstPagesArg, function (error, stdout, stderr) {
+                        debugger;
+                        if ( error ) {
+                            console.log('exec error: ' + error);
+                            return callback(error);
+                        }
+                        var firstPagesArg = [firstPages, signedLastPage, "cat", "output", outputFile];
+                        return execFile( "pdftk", firstPagesArg, function (error, stdout, stderr) {
+                            debugger;
+                            if ( error ) {
+                                console.log('exec error: ' + error);
+                                return callback(error);
+                            }
+                            return callback();
+                        });
+                    });
+                } );
             } );
         },
         generateFieldJson: function( sourceFile, nameRegex, callback){
