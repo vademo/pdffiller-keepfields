@@ -10,7 +10,7 @@ Reason for Fork
 -----------
 - Add functionality to stamp pdf
 ```javascript
-pdfFiller.stampLastPage(sourceFile, stampFile, outputFile, callback);
+pdfFiller.stampPDF(sourceFile, stampFile, outputFile, callback);
 pdfFiller.stampLastPage(sourceFile, stampFile, outputFile, callback);
 
 ```
