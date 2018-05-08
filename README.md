@@ -6,6 +6,15 @@ A node.js PDF form field data filler and FDF generator toolkit. This essentially
 
 NOTE: pdffiller failed to keep data if it was already included on a form. I added some logic to retain this data if it exists and released pdffiller-keepfields as a substitute.
 
+Reason for Fork
+-----------
+- Add functionality to stamp pdf
+```javascript
+pdfFiller.stampLastPage(sourceFile, stampFile, outputFile, callback);
+pdfFiller.stampLastPage(sourceFile, stampFile, outputFile, callback);
+
+```
+
 Quick start
 -----------
 
