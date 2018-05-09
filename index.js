@@ -63,55 +63,74 @@
           const lastPage = path.resolve(`./temp/${TimeStamp}_Last.pdf`);
           const firstPages = path.resolve(`./temp/${TimeStamp}_firstpages.pdf`);
           const signedLastPage = path.resolve(`./temp/${TimeStamp}_signedLast.pdf`);
-
-          var lastPageArg = [sourceFile, "cat", "end", "output", lastPage];
-            execFile( "pdftk", lastPageArg, function (error, stdout, stderr) {
+          const countpag = [sourceFile, "dump_data"];
+          execFile( "pdftk", countpag, function (error, stdout, stderr) {
+            if ( error ) {
+              console.log('exec error: ' + error);
+              return callback(error);
+            }
+            if(stdout.split('NumberOfPages: ')[1].split("\n")[0] === "1"){
+              var stampArg = [sourceFile, "stamp", stampFile, "output", outputFile];
+              return execFile( "pdftk", stampArg, function (error, stdout, stderr) {
                 debugger;
                 if ( error ) {
-                    console.log('exec error: ' + error);
-                    return callback(error);
+                  console.log('exec error: ' + error);
+                  return callback(error);
+                }
+                return callback();
+              });
+            }
+            else{
+              var lastPageArg = [sourceFile, "cat", "end", "output", lastPage];
+              execFile( "pdftk", lastPageArg, function (error, stdout, stderr) {
+                debugger;
+                if ( error ) {
+                  console.log('exec error: ' + error);
+                  return callback(error);
                 }
                 var stampArg = [lastPage, "stamp", stampFile, "output", signedLastPage];
                 return execFile( "pdftk", stampArg, function (error, stdout, stderr) {
+                  debugger;
+                  if ( error ) {
+                    console.log('exec error: ' + error);
+                    return callback(error);
+                  }
+                  var firstPagesArg = [sourceFile, "cat", "1-r2", "output", firstPages];
+                  return execFile( "pdftk", firstPagesArg, function (error, stdout, stderr) {
                     debugger;
                     if ( error ) {
+                      console.log('exec error: ' + error);
+                      return callback(error);
+                    }
+                    var firstPagesArg = [firstPages, signedLastPage, "cat", "output", outputFile];
+                    return execFile( "pdftk", firstPagesArg, function (error, stdout, stderr) {
+                      debugger;
+                      if ( error ) {
                         console.log('exec error: ' + error);
                         return callback(error);
-                    }
-                    var firstPagesArg = [sourceFile, "cat", "1-r2", "output", firstPages];
-                    return execFile( "pdftk", firstPagesArg, function (error, stdout, stderr) {
-                        debugger;
-                        if ( error ) {
-                            console.log('exec error: ' + error);
-                            return callback(error);
+                      }
+                      fs.unlink(lastPage, (err) => {
+                        if (err) {
+                          console.log('unlink failed', err);
                         }
-                        var firstPagesArg = [firstPages, signedLastPage, "cat", "output", outputFile];
-                        return execFile( "pdftk", firstPagesArg, function (error, stdout, stderr) {
-                            debugger;
-                            if ( error ) {
-                                console.log('exec error: ' + error);
-                                return callback(error);
-                            }
-                            fs.unlink(lastPage, (err) => {
-                              if (err) {
-                                console.log('unlink failed', err);
-                              }
-                            });
-                            fs.unlink(firstPages, (err) => {
-                              if (err) {
-                                console.log('unlink failed', err);
-                              }
-                            });
-                            fs.unlink(signedLastPage, (err) => {
-                              if (err) {
-                                console.log('unlink failed', err);
-                              }
-                            });
-                            return callback();
-                        });
+                      });
+                      fs.unlink(firstPages, (err) => {
+                        if (err) {
+                          console.log('unlink failed', err);
+                        }
+                      });
+                      fs.unlink(signedLastPage, (err) => {
+                        if (err) {
+                          console.log('unlink failed', err);
+                        }
+                      });
+                      return callback();
                     });
+                  });
                 } );
-            } );
+              } );
+            }
+          });
         },
         generateFieldJson: function( sourceFile, nameRegex, callback){
             var regName = /FieldName: ([^\n]*)/,
