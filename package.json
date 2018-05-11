@@ -1,5 +1,5 @@
 {
-  "name": "pdffiller-keepfieldsAndSignatue",
+  "name": "pdffiller-keepfields-signatue",
   "version": "1.1.0",
   "private": false,
   "description": "Fork from pdffiller-keepfields --> Take an existing PDF Form and data and PDF Filler will create a new PDF with all given fields populated.",
